@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.demo.pc</groupId>
+    <artifactId>product-catalog</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>catalog</module>
+        <module>common</module>
+        <module>stock</module>
+    </modules>
+
+    <properties>
+        <kumuluzee.version>3.10.0</kumuluzee.version>
+        <axon.version>4.3</axon.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <log4j-slf4j.version>2.13.3</log4j-slf4j.version>
+        <kumuluzee-logs.version>1.4.2   </kumuluzee-logs.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.kumuluz.ee.axon</groupId>
+            <artifactId>kumuluzee.axon</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-configuration</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-eventsourcing</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-modelling</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-messaging</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-server-connector</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

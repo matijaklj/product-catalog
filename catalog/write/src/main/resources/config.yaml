@@ -1,0 +1,14 @@
+axon:
+  axonserver:
+    componentName: product-catalog-write
+
+kumuluzee:
+  datasources:
+    - jndi-name: jdbc/productCatalogDS
+      connection-url: jdbc:postgresql://localhost:5432/productCatalog
+      username: postgres
+      password: postgres
+      pool:
+        max-size: 20
+      jta:
+        UserTransaction: java:comp/UserTransaction
