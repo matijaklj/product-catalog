@@ -1,24 +1,23 @@
 package com.demo.pc.write;
 
+import com.kumuluz.ee.kumuluzee.axon.ContainerManagedEntityManagerProvider;
+import com.kumuluz.ee.kumuluzee.axon.transaction.JtaTransactionManager;
 import org.axonframework.common.jpa.EntityManagerProvider;
-import org.axonframework.common.jpa.SimpleEntityManagerProvider;
-import org.axonframework.common.transaction.NoTransactionManager;
-import org.axonframework.common.transaction.Transaction;
 import org.axonframework.common.transaction.TransactionManager;
 import org.axonframework.config.Configurer;
 import org.axonframework.config.DefaultConfigurer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.ws.rs.ApplicationPath;
+import java.lang.invoke.MethodHandles;
 
 @ApplicationScoped
 public class AxonConfiguration {
 
-    private final String JBOSS_USER_TRANSACTION = "java:comp/UserTransaction";
+    private static final Logger logger = LoggerFactory.getLogger(
+            MethodHandles.lookup().lookupClass());
 
     @Produces
     @ApplicationScoped
@@ -30,30 +29,39 @@ public class AxonConfiguration {
 
     @Produces
     @ApplicationScoped
-    public TransactionManager transactionManager(EntityManager em) {
-        return new ContainerTransactionManager(em, JBOSS_USER_TRANSACTION);
-        //return NoTransactionManager.instance();// new JtaTransactionManager();
+    public TransactionManager transactionManager() {
+        return new JtaTransactionManager();
     }
 
     /**
      * Produces the entity manager.
      *
      * @return entity manager.
-     */
-    @Produces
-    @ApplicationScoped
-    public EntityManager entityManager() {
-        try {
-            EntityManagerFactory factory = Persistence.createEntityManagerFactory("product-catalog-write");
-            EntityManager em = factory.createEntityManager();
 
-            return em;
+    @Produces
+    public EntityManager entityManager() {
+
+        try {
+            InitialContext ctx = new InitialContext();
+            DataSource dcDataSource = (DataSource) ctx.lookup("jdbc/productCatalogDS");
+
+            Connection c = dcDataSource.getConnection();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
+        try {
+            //EntityManager em = emf.createEntityManager();
+            Context ctx = new InitialContext(System.getProperties());
+            Object ref = ctx.lookup("testEM");
+
+            return (EntityManager) ref;
         } catch (Exception ex) {
-            System.out.println("Failed to look up entity manager. " + ex.getMessage());
+            logger.error("Failed to look up entity manager. " + ex.getMessage());
         }
 
         return null;
-    }
+    }*/
 
     /**
      * Produces the entity manager provider.
@@ -61,9 +69,8 @@ public class AxonConfiguration {
      * @return entity manager provider.
      */
     @Produces
-    @ApplicationScoped
-    public EntityManagerProvider entityManagerProvider(
-            EntityManager entityManager) {
-        return new SimpleEntityManagerProvider(entityManager);
+    public EntityManagerProvider entityManagerProvider() {
+
+        return new ContainerManagedEntityManagerProvider.Builder().build();
     }
 }

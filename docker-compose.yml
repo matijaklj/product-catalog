@@ -1,0 +1,21 @@
+version: '3'
+services:
+  stock:
+    image: pc-stock:1.0
+    ports:
+      - "8080:8080"
+    networks:
+      - axon-network
+    depends_on:
+      - "axon-server"
+  axon-server:
+    image: "axoniq/axonserver"
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+      - "8224:8224"
+    networks:
+      - axon-network
+networks:
+  axon-network:
+    external: true

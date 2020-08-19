@@ -12,13 +12,17 @@ import org.axonframework.config.Configuration;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateMember;
 import org.axonframework.modelling.command.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 import static org.axonframework.modelling.command.AggregateLifecycle.createNew;
@@ -27,6 +31,8 @@ import static org.axonframework.modelling.command.AggregateLifecycle.createNew;
 @Aggregate
 @ApplicationScoped
 public class Product implements Serializable {
+    private static final Logger logger = LoggerFactory.getLogger(
+            MethodHandles.lookup().lookupClass());
 
     @Id
     @AggregateIdentifier
@@ -46,6 +52,7 @@ public class Product implements Serializable {
 
     @CommandHandler
     public Product(CreateProductCmd cmd) {
+        logger.info("Creating prodcut ID= " + cmd.getId());
         this.id = cmd.getId();
         this.name = cmd.getName();
         this.description = cmd.getDescription();

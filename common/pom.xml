@@ -23,10 +23,12 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-configuration</artifactId>
+            <version>${axon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-eventsourcing</artifactId>
+            <version>${axon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
@@ -36,10 +38,12 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-messaging</artifactId>
+            <version>${axon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-server-connector</artifactId>
+            <version>${axon.version}</version>
         </dependency>
     </dependencies>
     

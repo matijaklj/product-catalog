@@ -9,6 +9,4 @@ kumuluzee:
       username: postgres
       password: postgres
       pool:
-        max-size: 20
-      jta:
-        UserTransaction: java:comp/UserTransaction
+        max-size: 2000

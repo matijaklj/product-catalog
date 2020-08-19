@@ -1,4 +1,4 @@
-package com.demo.pc.read.command;
+package com.demo.pc.read.dtos;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,6 +8,8 @@ public class ProductDto implements Serializable {
     private String id;
     private String name;
     private String description;
+    private int stock;
+    private Float price = null;
     private List<CategoryDto> categories;
 
     public ProductDto(String id, String name, String description) {
@@ -23,6 +25,8 @@ public class ProductDto implements Serializable {
         this.description = description;
         this.categories = categories;
     }
+
+    public ProductDto() {}
 
     public String getId() {
         return id;
@@ -46,6 +50,22 @@ public class ProductDto implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 
     public List<CategoryDto> getCategories() {

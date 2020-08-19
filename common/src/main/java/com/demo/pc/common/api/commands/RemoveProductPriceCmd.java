@@ -9,11 +9,9 @@ public class RemoveProductPriceCmd implements Serializable {
 
     @TargetAggregateIdentifier
     private String id;
-    private String productId;
 
-    public RemoveProductPriceCmd(String id, String productId) {
+    public RemoveProductPriceCmd(String id) {
         this.id = id;
-        this.productId = productId;
     }
 
     public RemoveProductPriceCmd() {}
@@ -24,13 +22,5 @@ public class RemoveProductPriceCmd implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
     }
 }

@@ -1,38 +1,69 @@
 package com.demo.pc.read.eventHandlers;
 
-import com.demo.pc.common.api.events.ProductCategoryAddedEvent;
-import com.demo.pc.common.api.events.ProductCreatedEvent;
-import com.demo.pc.read.command.CategoryDto;
-import com.demo.pc.read.command.ProductDto;
+import com.demo.pc.common.api.events.*;
+import com.demo.pc.read.dtos.CategoryDto;
+import com.demo.pc.read.dtos.ProductDto;
+import com.demo.pc.read.repositories.CategoryRepository;
+import com.demo.pc.read.repositories.ProductRepository;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 
 @ApplicationScoped
+@ProcessingGroup("products")
 public class ProductEventHandlers {
 
-    @Inject
-    ConcurrentMap<String, ProductDto> productDBMap;
+    private static final Logger logger = Logger.getLogger(ProductEventHandlers.class.getName());
 
     @Inject
-    ConcurrentMap<String, CategoryDto> categoryDBMap;
+    private ProductRepository productRepository;
+
+    @Inject
+    private CategoryRepository categoryRepository;
 
     @EventHandler
-    public void handleProductCreated(ProductCreatedEvent evt) {
-        productDBMap.putIfAbsent(evt.getId(), new ProductDto(evt.getId(), evt.getName(), evt.getDescription()));
+    public void handleProductCreated(ProductCreatedEvent event) {
+        logger.info("Handling event ProductCreatedEvent :: " + '\'' + event.toString());
+        productRepository.insertNewProduct(new ProductDto(event.getId(), event.getName(), event.getDescription()));
     }
 
     @EventHandler
-    public void handleProductCategoryAdded(ProductCategoryAddedEvent evt) {
-        ProductDto p = productDBMap.get(evt.getId());
-        CategoryDto c = categoryDBMap.get(evt.getCategoryId());
+    public void handleStockUpdate(StockCreatedEvent event) {
+        logger.info("Handling event StockCreatedEvent :: " + '\'' + event.toString());
 
-        List<CategoryDto> categoryDtoList = p.getCategories();
-        categoryDtoList.add(c);
-
-        p.setCategories(categoryDtoList);
+        productRepository.updateProductStock(event.getProductId(), event.getQuantity());
     }
+
+    @EventHandler
+    public void handleStockUpdate(StockUpdatedEvent event) {
+        logger.info("Handling event StockUpdatedEvent :: " + '\'' + event.toString());
+
+        productRepository.updateProductStock(event.getProductId(), event.getQuantity());
+    }
+
+    @EventHandler
+    public void handleProductCategoryAdded(ProductCategoryAddedEvent event) {
+        CategoryDto c = categoryRepository.getCategory(event.getCategoryId());
+
+        productRepository.addProductCategory(event.getId(), c);
+    }
+
+    @EventHandler
+    public void handleProductCategoryRemoved(ProductCategoryRemovedEvent event) {
+        CategoryDto c = categoryRepository.getCategory(event.getCategoryId());
+
+        productRepository.removeProductCategory(event.getId(), c);
+    }
+
+    @EventHandler
+    public void handleProductCategoryRemoved(PriceCreatedEvent event) {
+        productRepository.updateProductPrice(event.getProductId(), event.getValue());
+    }
+    
+    
 }

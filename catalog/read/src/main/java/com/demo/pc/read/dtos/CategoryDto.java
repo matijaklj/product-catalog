@@ -1,4 +1,4 @@
-package com.demo.pc.read.command;
+package com.demo.pc.read.dtos;
 
 import java.io.Serializable;
 
@@ -10,6 +10,8 @@ public class CategoryDto implements Serializable {
         this.id = id;
         this.name = name;
     }
+
+    public CategoryDto() {}
 
     public String getId() {
         return id;
