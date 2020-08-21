@@ -7,7 +7,7 @@ import scala.util.Random
 
 object PostProduct {
 
-  var i = 22000
+  var i = 6000
 
   val feeder = Iterator.continually(Map("id" -> {
     i=i+1

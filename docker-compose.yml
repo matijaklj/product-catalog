@@ -1,21 +1,75 @@
 version: '3'
 services:
-  stock:
-    image: pc-stock:1.0
+  pc-read:
+    image: "pc-read:0.1"
     ports:
-      - "8080:8080"
+        - "9090"
     networks:
-      - axon-network
+      - "axon-network"
     depends_on:
-      - "axon-server"
+      - axon-server
+      - postgres-db
+      - mongo-db
+  pc-write:
+    image: "pc-write:0.1"
+    ports:
+      - "8080"
+    networks:
+      - "axon-network"
+    depends_on:
+          - axon-server
+          - postgres-db
+  pc-pricing:
+      image: "pc-pricing:0.1"
+      networks:
+        - "axon-network"
+      ports:
+        - "7070:7070"
+  pc-stock:
+    image: "pc-stock:1.0"
+    ports:
+      - "6060:6060"
+    depends_on:
+      - axon-server
+    networks:
+      - "axon-network"
   axon-server:
     image: "axoniq/axonserver"
+    networks:
+      - "axon-network"
     ports:
       - "8024:8024"
       - "8124:8124"
       - "8224:8224"
+  mongo-db:
+    image: "mongo"
     networks:
-      - axon-network
+      - "axon-network"
+    ports:
+      - "27017:27017"
+  postgres-db:
+    image: "postgres"
+    networks:
+      - "axon-network"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=productCatalog
+  # load balancing
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - pc-write
+      - pc-read
+    ports:
+      - "4000:4000"
+      - "5000:5000"
+    networks:
+      - "axon-network"
 networks:
   axon-network:
     external: true

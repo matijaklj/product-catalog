@@ -4,6 +4,7 @@ import com.demo.pc.read.dtos.CategoryDto;
 import com.demo.pc.read.dtos.PageItems;
 import com.demo.pc.read.dtos.ProductDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -25,7 +26,9 @@ public class ProductRepository {
     private ObjectMapper objectMapper;
 
     public ProductRepository() {
-        this.mongoClient = MongoClients.create();
+        Optional<String> connectionString = ConfigurationUtil.getInstance().get("kumuluzee.mongodb.connection-string");
+        this.mongoClient = connectionString.map(MongoClients::create).orElseGet(MongoClients::create);
+
         MongoDatabase database = mongoClient.getDatabase("product-catalog");
         this.collection = database.getCollection("products");
         this.objectMapper = new ObjectMapper();

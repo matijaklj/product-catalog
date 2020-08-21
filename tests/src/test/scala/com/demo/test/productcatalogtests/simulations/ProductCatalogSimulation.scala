@@ -10,12 +10,13 @@ import scala.concurrent.duration._
 class ProductCatalogSimulation extends Simulation {
 
   val httpConf = http.baseUrls(Enviroment.baseURL)
+    .shareConnections
     .headers(Headers.commonHeader)
     .contentTypeHeader("application/json")
 
   setUp(PostProduct.postProduct.inject(
       atOnceUsers(1),
-      rampUsersPerSec(1) to 500 during(60*2 seconds)
+      rampUsersPerSec(1) to 100 during(60 seconds)
   ))
     .protocols(httpConf)
     .maxDuration(1 minutes)

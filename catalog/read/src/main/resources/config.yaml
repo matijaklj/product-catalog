@@ -1,15 +1,7 @@
-kumuluzee:
-  datasources:
-    - jndi-name: jdbc/productCatalogDS
-      connection-url: jdbc:postgresql://localhost:5432/productCatalog
-      username: postgres
-      password: postgres
-      pool:
-        max-size: 20
-
 axon:
   axonserver:
     componentName: product-catalog-read
+    #servers: axon-server
   eventhandling:
     processors:
       products:
@@ -20,3 +12,16 @@ axon:
         mode: tracking
         threadCount: 2
         initialSegmentCount: 4
+
+kumuluzee:
+  mongodb:
+    connection-string: "mongodb://localhost"
+    #connection: "mongodb://mongo-db"
+  datasources:
+    - jndi-name: jdbc/productCatalogDS
+      #connection-url: jdbc:postgresql://postgres-db:5432/productCatalog
+      connection-url: jdbc:postgresql://localhost:5432/productCatalog
+      username: postgres
+      password: postgres
+      pool:
+        max-size: 20

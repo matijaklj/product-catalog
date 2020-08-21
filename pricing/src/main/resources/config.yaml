@@ -1,3 +1,4 @@
 axon:
   axonserver:
     componentName: pc-pricing
+    servers: axon-server

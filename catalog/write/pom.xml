@@ -123,7 +123,7 @@
                     <execution>
                         <id>package</id>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                     </execution>
                 </executions>

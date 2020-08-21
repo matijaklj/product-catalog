@@ -4,6 +4,7 @@ import com.demo.pc.read.dtos.CategoryDto;
 import com.demo.pc.read.dtos.PageItems;
 import com.demo.pc.read.dtos.ProductDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -15,6 +16,7 @@ import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -26,7 +28,9 @@ public class CategoryRepository {
     private ObjectMapper objectMapper;
 
     public CategoryRepository() {
-        this.mongoClient = MongoClients.create();
+        Optional<String> connectionString = ConfigurationUtil.getInstance().get("kumuluzee.mongodb.connection-string");
+        this.mongoClient = connectionString.map(MongoClients::create).orElseGet(MongoClients::create);
+
         MongoDatabase database = mongoClient.getDatabase("product-catalog");
         this.collection = database.getCollection("categories");
         this.objectMapper = new ObjectMapper();
