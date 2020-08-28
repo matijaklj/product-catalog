@@ -4,21 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class PriceDto implements Serializable {
-    private String id;
     private String productId;
     private float value;
+    /*
     private Date validFrom;
     private Date validTo;
+     */
 
     public PriceDto() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getProductId() {
@@ -36,7 +29,7 @@ public class PriceDto implements Serializable {
     public void setValue(float value) {
         this.value = value;
     }
-
+    /*
     public Date getValidFrom() {
         return validFrom;
     }
@@ -52,4 +45,5 @@ public class PriceDto implements Serializable {
     public void setValidTo(Date validTo) {
         this.validTo = validTo;
     }
+     */
 }

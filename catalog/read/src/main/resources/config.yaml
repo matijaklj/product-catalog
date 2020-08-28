@@ -1,27 +1,28 @@
 axon:
   axonserver:
     componentName: product-catalog-read
+    servers: 34.78.211.207
     #servers: axon-server
-  eventhandling:
-    processors:
-      products:
-        mode: tracking
-        threadCount: 2
-        initialSegmentCount: 4
-      categories:
-        mode: tracking
-        threadCount: 2
-        initialSegmentCount: 4
+  #eventhandling:
+    #processors:
+    #  products:
+    #    mode: tracking
+    #    threadCount: 2
+    #    initialSegmentCount: 4
+    #  categories:
+    #    mode: tracking
+    #    threadCount: 2
+    #    initialSegmentCount: 4
 
 kumuluzee:
   mongodb:
-    connection-string: "mongodb://localhost"
+    connection-string: "mongodb://34.76.171.228"
     #connection: "mongodb://mongo-db"
   datasources:
-    - jndi-name: jdbc/productCatalogDS
+    - jndi-name: jdbc/pcReadDS
       #connection-url: jdbc:postgresql://postgres-db:5432/productCatalog
-      connection-url: jdbc:postgresql://localhost:5432/productCatalog
-      username: postgres
-      password: postgres
+      connection-url: jdbc:postgresql://104.199.54.135:5432/pc_read
+      username: matijaklj
+      password: axonTest
       pool:
-        max-size: 20
+        max-size: 2000

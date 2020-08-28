@@ -24,7 +24,7 @@ public class StockResource {
     @Inject
     private CommandGateway commandGateway;
 
-    @POST
+    /*@POST
     @Path("{id}")
     public Response createStock(@PathParam("id") String id) {
         CompletableFuture<String> futureResult = commandGateway.send(new CreateProductStockCmd(id, id, 0));
@@ -34,12 +34,12 @@ public class StockResource {
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-    }
+    }*/
 
     @POST
     @Path("{id}/add/{quantity}")
     public Response addToStock(@PathParam("id") String id, @PathParam("quantity") int quantity) {
-        CompletableFuture<String> futureResult = commandGateway.send(new AddProductStockCmd(id, id, quantity));
+        CompletableFuture<String> futureResult = commandGateway.send(new AddProductStockCmd(id + "_stock", id, quantity));
 
         try {
             return Response.ok(futureResult.get()).build();
@@ -51,7 +51,7 @@ public class StockResource {
     @POST
     @Path("{id}/remove/{quantity}")
     public Response removeFromStock(@PathParam("id") String id, @PathParam("quantity") int quantity) {
-        CompletableFuture<String> futureResult = commandGateway.send(new RemoveProductStockCmd(id, id, quantity));
+        CompletableFuture<String> futureResult = commandGateway.send(new RemoveProductStockCmd(id + "_stock", id, quantity));
 
         try {
             return Response.ok(futureResult.get()).build();
@@ -67,28 +67,4 @@ public class StockResource {
         return Response.ok().build();
     }
 
-    @POST
-    @Path("test")
-    public Response testCreateProduct() {
-
-        List<CompletableFuture<String>> futures = new ArrayList<>();
-        for (int i = 100; i < 105; i++) {
-            CreateProductCmd cmd = new CreateProductCmd(Integer.toString(i), "test product " + i, "test desc");
-
-            futures.add(commandGateway.send(cmd));
-        }
-
-        List<String> ids = new ArrayList<>();
-        for(CompletableFuture<String> f : futures) {
-            try {
-                ids.add(f.get());
-            } catch (Exception e) {
-                System.out.println();
-                System.out.println("ERROR TEST");
-                System.out.println(e.getMessage());
-                System.out.println();
-            }
-        }
-        return Response.ok(ids).build();
-    }
 }

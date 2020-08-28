@@ -35,4 +35,11 @@ public class StockAddedEvent {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "StockUpdatedEvent{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

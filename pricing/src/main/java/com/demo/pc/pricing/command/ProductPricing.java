@@ -3,6 +3,7 @@ package com.demo.pc.pricing.command;
 import com.demo.pc.common.api.commands.*;
 import com.demo.pc.common.api.events.PriceCreatedEvent;
 import com.demo.pc.common.api.events.PriceRemovedEvent;
+import com.demo.pc.common.api.events.PriceUpdatedEvent;
 import com.kumuluz.ee.kumuluzee.axon.stereotype.Aggregate;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.common.Assert;
@@ -12,6 +13,7 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import javax.enterprise.context.ApplicationScoped;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 import static org.axonframework.modelling.command.AggregateLifecycle.markDeleted;
@@ -19,6 +21,8 @@ import static org.axonframework.modelling.command.AggregateLifecycle.markDeleted
 @ApplicationScoped
 @Aggregate
 public class ProductPricing {
+
+    private static final Logger logger = Logger.getLogger(ProductPricing.class.getName());
 
     @AggregateIdentifier
     private String id;
@@ -36,14 +40,32 @@ public class ProductPricing {
     }
 
     @CommandHandler
+    public void updatePrice(UpdateProductPriceCmd cmd) {
+        Assert.isTrue(cmd.getValue() > 0, () -> "Price value must not be negative.");
+
+        apply(new PriceUpdatedEvent(cmd.getId(), cmd.getProductId(),
+                cmd.getValue(), cmd.getValidFrom(), cmd.getValidTo()));
+    }
+
+    @CommandHandler
     public void removePrice(RemoveProductPriceCmd cmd) {
         apply(new PriceRemovedEvent(cmd.getId()));
     }
 
     @EventSourcingHandler
     public void on(PriceCreatedEvent event) {
+        logger.info("Created Product price id :: " + event.getId() + " price :: " + event.getValue());
         this.id = event.getId();
         this.productId = event.getProductId();
+        this.value = event.getValue();
+        this.validFrom = event.getValidFrom();
+        this.validTo = event.getValidTo();
+    }
+
+    @EventSourcingHandler
+    public void on(PriceUpdatedEvent event) {
+        logger.info("Updated Product price id :: " + event.getId() + " price :: " + event.getValue());
+
         this.value = event.getValue();
         this.validFrom = event.getValidFrom();
         this.validTo = event.getValidTo();

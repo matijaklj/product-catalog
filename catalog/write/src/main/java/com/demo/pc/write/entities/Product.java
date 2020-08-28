@@ -1,31 +1,26 @@
 package com.demo.pc.write.entities;
 
 import com.demo.pc.common.api.commands.AddProductCategoryCmd;
-import com.demo.pc.common.api.commands.CreateCategoryCmd;
 import com.demo.pc.common.api.commands.CreateProductCmd;
-import com.demo.pc.common.api.events.CategoryCreatedEvent;
+import com.demo.pc.common.api.commands.UpdateProductCmd;
 import com.demo.pc.common.api.events.ProductCategoryAddedEvent;
 import com.demo.pc.common.api.events.ProductCreatedEvent;
+import com.demo.pc.common.api.events.ProductUpdatedEvent;
+import com.demo.pc.common.api.exceptions.CategoryAlreadyAddedException;
 import com.kumuluz.ee.kumuluzee.axon.stereotype.Aggregate;
 import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.config.Configuration;
 import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateMember;
-import org.axonframework.modelling.command.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
-import static org.axonframework.modelling.command.AggregateLifecycle.createNew;
 
 @Entity
 @Aggregate
@@ -52,7 +47,7 @@ public class Product implements Serializable {
 
     @CommandHandler
     public Product(CreateProductCmd cmd) {
-        logger.info("Creating prodcut ID= " + cmd.getId());
+        logger.info("Creating product ID= " + cmd.getId() + ".");
         this.id = cmd.getId();
         this.name = cmd.getName();
         this.description = cmd.getDescription();
@@ -63,10 +58,27 @@ public class Product implements Serializable {
     }
 
     @CommandHandler
-    public void addCategory(AddProductCategoryCmd cmd) {
-        this.categories.add(new Category(cmd.getCategoryId()));
+    public void editProduct(UpdateProductCmd cmd) {
+        logger.info("Updating product ID= " + cmd.getId() + ".");
+        this.name = cmd.getName();
+        this.description = cmd.getDescription();
 
-        apply(new ProductCategoryAddedEvent(cmd.getId(), cmd.getCategoryId()));
+        apply(new ProductUpdatedEvent(cmd.getId(),
+                cmd.getName(),
+                cmd.getDescription()));
+    }
+
+    @CommandHandler
+    public void addCategory(AddProductCategoryCmd cmd) throws CategoryAlreadyAddedException {
+        logger.info("Adding category id: " + cmd.getCategoryId() + " to Product id: " + cmd.getId() + ".");
+        if (categories.stream().noneMatch(c -> c.getId().equals(cmd.getCategoryId()))) {
+            this.categories.add(new Category(cmd.getCategoryId()));
+
+            apply(new ProductCategoryAddedEvent(cmd.getId(), cmd.getCategoryId()));
+        } else {
+            throw new CategoryAlreadyAddedException();
+        }
+
     }
 
     public Set<Category> getCategories() {
@@ -99,5 +111,11 @@ public class Product implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '}';
     }
 }

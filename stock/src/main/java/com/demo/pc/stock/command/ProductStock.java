@@ -39,7 +39,7 @@ public class ProductStock {
     public void addStock(AddProductStockCmd cmd) {
         Assert.isTrue(cmd.getQuantity() >= 0, () -> "Added quantity should not be negative!");
 
-        apply(new StockAddedEvent(this.id, this.productId, this.quantity));
+        apply(new StockAddedEvent(this.id, this.productId, cmd.getQuantity()));
     }
 
     @CommandHandler
@@ -49,7 +49,7 @@ public class ProductStock {
         if (cmd.getQuantity() > this.quantity)
             throw new InsufficientStockException(cmd.getId(), cmd.getProductId());
 
-        apply(new StockRemovedEvent(this.id, this.productId, this.quantity));
+        apply(new StockRemovedEvent(this.id, this.productId, cmd.getQuantity()));
     }
 
     @EventSourcingHandler

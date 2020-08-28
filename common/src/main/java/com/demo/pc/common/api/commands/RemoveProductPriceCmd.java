@@ -23,4 +23,11 @@ public class RemoveProductPriceCmd implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "StockUpdatedEvent{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

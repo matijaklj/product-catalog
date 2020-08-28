@@ -33,6 +33,13 @@ public class ProductEventHandlers {
     }
 
     @EventHandler
+    public void handleProductUpdated(ProductUpdatedEvent event) {
+        logger.info("Handling event ProductUpdatedEvent :: " + '\'' + event.toString());
+
+        productRepository.editProduct(new ProductDto(event.getId(), event.getName(), event.getDescription()));
+    }
+
+    @EventHandler
     public void handleStockUpdate(StockCreatedEvent event) {
         logger.info("Handling event StockCreatedEvent :: " + '\'' + event.toString());
 
@@ -61,7 +68,12 @@ public class ProductEventHandlers {
     }
 
     @EventHandler
-    public void handleProductCategoryRemoved(PriceCreatedEvent event) {
+    public void handlePriceCreated(PriceCreatedEvent event) {
+        productRepository.updateProductPrice(event.getProductId(), event.getValue());
+    }
+
+    @EventHandler
+    public void handlePriceUpdated(PriceUpdatedEvent event) {
         productRepository.updateProductPrice(event.getProductId(), event.getValue());
     }
     

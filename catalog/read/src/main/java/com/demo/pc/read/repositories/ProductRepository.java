@@ -49,7 +49,8 @@ public class ProductRepository {
         }
     }
 
-    public ProductDto getProduct(String id) {
+    public ProductDto
+    getProduct(String id) {
         return toDto(collection.find(eq("id", id)).projection(new Document("_id", false)).first(), objectMapper);
     }
 
@@ -102,12 +103,18 @@ public class ProductRepository {
         updateProduct(p);
     }
 
+    public void editProduct(ProductDto p) {
+        ProductDto pOld = getProduct(p.getId());
+        pOld.setDescription(p.getDescription());
+        pOld.setName(p.getName());
+    }
+
     private void updateProduct(ProductDto p) {
         try {
             String jsonStr = objectMapper.writeValueAsString(p);
 
             Document d = Document.parse(jsonStr);
-            collection.updateOne(eq("id", p.getId()), d);
+            collection.replaceOne(eq("id", p.getId()), d); // try replaceOne
         } catch (Exception e) {
             e.printStackTrace();
         }

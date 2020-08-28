@@ -1,4 +1,14 @@
 axon:
   axonserver:
     componentName: pc-pricing
-    servers: axon-server
+    #servers: axon-server
+
+kumuluzee:
+  datasources:
+    - jndi-name: jdbc/pcPricingDS
+      #connection-url: jdbc:postgresql://postgres-db:5432/productCatalog
+      connection-url: jdbc:postgresql://localhost:5432/productCatalog
+      username: postgres
+      password: postgres
+      pool:
+        max-size: 100

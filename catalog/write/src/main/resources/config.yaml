@@ -1,13 +1,12 @@
 axon:
   axonserver:
     componentName: product-catalog-write
-    #servers: axon-server
 
 kumuluzee:
   datasources:
     - jndi-name: jdbc/productCatalogDS
-      #connection-url: jdbc:postgresql://postgres-db:5432/productCatalog
       connection-url: jdbc:postgresql://localhost:5432/productCatalog
+      #connection-url: jdbc:postgresql://pc:5432/productCatalog
       username: postgres
       password: postgres
       pool:

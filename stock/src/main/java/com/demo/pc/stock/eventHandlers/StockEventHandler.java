@@ -8,21 +8,26 @@ import org.axonframework.eventhandling.EventHandler;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class StockEventHandler {
 
+    private static final Logger logger = Logger.getLogger(StockEventHandler.class.getName());
+
     @Inject
     private CommandGateway commandGateway;
 
-    /*
     @EventHandler
     public void handle(ProductCreatedEvent event) throws InterruptedException, ExecutionException {
-        CompletableFuture<String> futureResult = commandGateway.send(new CreateProductStockCmd(event.getId(), event.getId(), 0));
+        String stockId = event.getId() + "_stock";
+
+        logger.info("Product created id: " + event.getId() + " - creating stock id: " + stockId + ".");
+        CompletableFuture<String> futureResult = commandGateway.send(new CreateProductStockCmd(stockId, event.getId(), 0));
 
         futureResult.get();
     }
-     */
 }

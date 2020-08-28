@@ -1,3 +1,13 @@
 axon:
   axonserver:
     componentName: pc-stock
+
+kumuluzee:
+  datasources:
+    - jndi-name: jdbc/pcStockDS
+      #connection-url: jdbc:postgresql://postgres-db:5432/productCatalog
+      connection-url: jdbc:postgresql://localhost:5432/pc_stock
+      username: postgres
+      password: postgres
+      pool:
+        max-size: 100

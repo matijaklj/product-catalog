@@ -63,4 +63,11 @@ public class CreateProductPriceCmd implements Serializable {
     public void setValidTo(Date validTo) {
         this.validTo = validTo;
     }
+
+    @Override
+    public String toString() {
+        return "StockUpdatedEvent{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

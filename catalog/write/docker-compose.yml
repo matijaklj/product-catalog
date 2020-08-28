@@ -1,0 +1,32 @@
+version: '3'
+services:
+  pc-write:
+    image: "pc-write:0.1"
+    ports:
+      - "8080:8080"
+    networks:
+      - "axon-network"
+    depends_on:
+      - axon-server
+      - postgres-db
+  axon-server:
+    image: "axoniq/axonserver"
+    networks:
+      - "axon-network"
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+      - "8224:8224"
+  postgres-db:
+    image: "postgres"
+    networks:
+      - "axon-network"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=productCatalog
+networks:
+  axon-network:
+    external: true

@@ -6,7 +6,7 @@
              version="2.1">
     <persistence-unit name="product-catalog-read" transaction-type="JTA">
 
-        <jta-data-source>jdbc/productCatalogDS</jta-data-source>
+        <jta-data-source>jdbc/pcReadDS</jta-data-source>
 
         <class>org.axonframework.eventhandling.tokenstore.jpa.TokenEntry</class>
 

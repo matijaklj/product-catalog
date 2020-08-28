@@ -8,7 +8,7 @@ public class ProductDto implements Serializable {
     private String id;
     private String name;
     private String description;
-    private int stock;
+    private Integer stock = null;
     private Float price = null;
     private List<CategoryDto> categories;
 
@@ -52,11 +52,11 @@ public class ProductDto implements Serializable {
         this.description = description;
     }
 
-    public int getStock() {
+    public Integer getStock() {
         return stock;
     }
 
-    public void setStock(int stock) {
+    public void setStock(Integer stock) {
         this.stock = stock;
     }
 
