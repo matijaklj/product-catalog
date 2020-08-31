@@ -22,7 +22,6 @@ public class AxonConfiguration {
         return new JtaTransactionManager();
     }
 
-
     @Produces
     @ApplicationScoped
     public TokenStore configureTokenStore(EntityManagerProvider entityManagerProvider, Serializer s) {
@@ -31,7 +30,6 @@ public class AxonConfiguration {
                 .serializer(s)
                 .build();
     }
-
 
     @Produces
     @ApplicationScoped

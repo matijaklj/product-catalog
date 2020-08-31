@@ -5,6 +5,9 @@ import com.demo.pc.read.dtos.PageItems;
 import com.demo.pc.read.dtos.ProductDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -29,13 +32,19 @@ public class CategoryRepository {
 
     public CategoryRepository() {
         Optional<String> connectionString = ConfigurationUtil.getInstance().get("kumuluzee.mongodb.connection-string");
-        this.mongoClient = connectionString.map(MongoClients::create).orElseGet(MongoClients::create);
 
-        MongoDatabase database = mongoClient.getDatabase("product-catalog");
-        this.collection = database.getCollection("categories");
-        this.objectMapper = new ObjectMapper();
+        if (connectionString.isPresent()) {
+            MongoCredential cred = MongoCredential.createCredential("root", "admin", "mongoProductCatalog1968".toCharArray());
 
-        collection.createIndex(new Document("id", 1), new IndexOptions().unique(true));
+            ConnectionString cnnStr = new ConnectionString(connectionString.get());
+            MongoClientSettings sett = MongoClientSettings.builder().applyConnectionString(cnnStr).credential(cred).build();
+            this.mongoClient = MongoClients.create(sett);
+            MongoDatabase database = mongoClient.getDatabase("product-catalog");
+            this.collection = database.getCollection("categories");
+            this.objectMapper = new ObjectMapper();
+
+            collection.createIndex(new Document("id", 1), new IndexOptions().unique(true));
+        }
     }
 
     public void insertNewCategory(CategoryDto p) {

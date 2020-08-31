@@ -55,6 +55,7 @@ public class ProductEventHandlers {
 
     @EventHandler
     public void handleProductCategoryAdded(ProductCategoryAddedEvent event) {
+        logger.info("Handling event ProductCategoryAddedEvent :: " + '\'' + event.toString());
         CategoryDto c = categoryRepository.getCategory(event.getCategoryId());
 
         productRepository.addProductCategory(event.getId(), c);
@@ -69,6 +70,7 @@ public class ProductEventHandlers {
 
     @EventHandler
     public void handlePriceCreated(PriceCreatedEvent event) {
+        logger.info("Handling event StockUpdatedEvent :: " + '\'' + event.toString());
         productRepository.updateProductPrice(event.getProductId(), event.getValue());
     }
 

@@ -3,6 +3,7 @@ package com.demo.pc.read.queries;
 import com.demo.pc.read.dtos.PageItems;
 import com.demo.pc.read.dtos.ProductDto;
 import com.demo.pc.read.repositories.ProductRepository;
+import org.axonframework.queryhandling.QueryExecutionException;
 import org.axonframework.queryhandling.QueryHandler;
 
 import javax.enterprise.context.ApplicationScoped;

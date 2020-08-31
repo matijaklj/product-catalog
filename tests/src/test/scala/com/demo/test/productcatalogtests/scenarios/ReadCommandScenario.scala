@@ -9,9 +9,9 @@ import sun.jvm.hotspot.runtime.Flags
 object ReadCommandScenario {
 
   //private val categoryIdFeeder = csv("data/categoryId.csv").eager.circular
-  private val categoryIdFeederRnd = csv("data/categoryId.csv").eager.random
+  private val categoryIdFeederRnd = csv("data/categoryId.csv").circular
   //private val productIdFeeder = csv("data/productId.csv").eager.circular
-  private val productIdFeederRnd = csv("data/productId.csv").eager.random
+  private val productIdFeederRnd = csv("data/productId.csv").circular
 
   val r = scala.util.Random
   private val rndValue = () => BigDecimal(r.nextInt(200)+r.nextFloat).setScale(2, BigDecimal.RoundingMode.HALF_UP).toFloat

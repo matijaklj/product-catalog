@@ -5,21 +5,32 @@ import com.demo.pc.read.dtos.PageItems;
 import com.demo.pc.read.dtos.ProductDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
+import com.mongodb.AuthenticationMechanism;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.MongoClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class ProductRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(
+            MethodHandles.lookup().lookupClass());
 
     private MongoClient mongoClient;
     private MongoCollection<Document> collection;
@@ -27,13 +38,20 @@ public class ProductRepository {
 
     public ProductRepository() {
         Optional<String> connectionString = ConfigurationUtil.getInstance().get("kumuluzee.mongodb.connection-string");
-        this.mongoClient = connectionString.map(MongoClients::create).orElseGet(MongoClients::create);
 
-        MongoDatabase database = mongoClient.getDatabase("product-catalog");
-        this.collection = database.getCollection("products");
-        this.objectMapper = new ObjectMapper();
+        if (connectionString.isPresent()) {
+            MongoCredential cred = MongoCredential.createCredential("root", "admin", "mongoProductCatalog1968".toCharArray());
 
-        collection.createIndex(new Document("id", 1), new IndexOptions().unique(true));
+            ConnectionString cnnStr = new ConnectionString(connectionString.get());
+            MongoClientSettings sett = MongoClientSettings.builder().applyConnectionString(cnnStr).credential(cred).build();
+            this.mongoClient = MongoClients.create(sett);
+
+            MongoDatabase database = mongoClient.getDatabase("product-catalog");
+            this.collection = database.getCollection("products");
+            this.objectMapper = new ObjectMapper();
+
+            collection.createIndex(new Document("id", 1), new IndexOptions().unique(true));
+        }
     }
 
     public void insertNewProduct(ProductDto p) {
@@ -49,8 +67,7 @@ public class ProductRepository {
         }
     }
 
-    public ProductDto
-    getProduct(String id) {
+    public ProductDto getProduct(String id) {
         return toDto(collection.find(eq("id", id)).projection(new Document("_id", false)).first(), objectMapper);
     }
 
@@ -83,10 +100,17 @@ public class ProductRepository {
     }
 
     public void addProductCategory(String id, CategoryDto c) {
-        ProductDto p = getProduct(id);
-        p.getCategories().add(c);
+        try {
+            String jsonStr = objectMapper.writeValueAsString(c);
 
-        updateProduct(p);
+            Document cat = Document.parse(jsonStr);
+
+            collection.updateOne(
+                    eq("id", id),
+                    Updates.push("categories", c.getName()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeProductCategory(String id, CategoryDto c) {
@@ -104,9 +128,11 @@ public class ProductRepository {
     }
 
     public void editProduct(ProductDto p) {
-        ProductDto pOld = getProduct(p.getId());
-        pOld.setDescription(p.getDescription());
-        pOld.setName(p.getName());
+        ProductDto pEdited = getProduct(p.getId());
+        pEdited.setDescription(p.getDescription());
+        pEdited.setName(p.getName());
+
+        updateProduct(pEdited);
     }
 
     private void updateProduct(ProductDto p) {

@@ -37,14 +37,25 @@ public class ProductResource {
     @GET
     @Path("{id}")
     public Response getProduct(@PathParam("id") String id) {
-
-        logger.info("sending query: Get Product id: " + id);
+        long startTime = System.nanoTime();
+        //logger.info("sending query: Get Product id: " + id);
 
         CompletableFuture<ProductDto> future = queryGateway.query(new FetchProductSummaryQuery(id), ProductDto.class);
 
         try {
-            return Response.ok().entity(future.get()).build();
+            ProductDto p = future.get();
+            long endTime = System.nanoTime();
+
+            // get difference of two nanoTime values
+            long timeElapsed = endTime - startTime;
+            //logger.info("Get Product id elapsed time: " + timeElapsed / 1000000);
+            return Response.ok().entity(p).build();
         } catch (Exception e) {
+            long endTime = System.nanoTime();
+
+            // get difference of two nanoTime values
+            long timeElapsed = endTime - startTime;
+            //logger.info("ERROR get product id ERROR " + timeElapsed / 1000000);
             return Response.status(404).build();
         }
 
@@ -54,13 +65,25 @@ public class ProductResource {
     public Response getProducts(@QueryParam("skip") int skip,
                                 @DefaultValue("20") @QueryParam("take") int take,
                                 @QueryParam("s") String search) {
-        logger.info("sending query: Get Products skip: " + skip + ", take: " + take + ", search: " + search);
+        long startTime = System.nanoTime();
+        //logger.info("sending query: Get Products skip: " + skip + ", take: " + take + ", search: " + search);
 
         CompletableFuture<PageItems> future = queryGateway.query(new FetchProductListQuery(skip, take, search), PageItems.class);
 
         try {
-            return Response.ok().entity(future.get()).build();
+            PageItems<PageItems> pp = future.get();
+            long endTime = System.nanoTime();
+
+            // get difference of two nanoTime values
+            long timeElapsed = endTime - startTime;
+            logger.info("Get Product list elapsed time: " + timeElapsed / 1000000);
+            return Response.ok().entity(pp).build();
         } catch (Exception e) {
+            long endTime = System.nanoTime();
+
+            // get difference of two nanoTime values
+            long timeElapsed = endTime - startTime;
+            logger.info("ERROR get product list ERROR " + timeElapsed / 1000000);
             return Response.status(404).build();
         }
     }
