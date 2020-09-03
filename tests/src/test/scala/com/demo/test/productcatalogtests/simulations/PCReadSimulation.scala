@@ -14,6 +14,8 @@ class PCReadSimulation extends Simulation {
     .headers(Headers.commonHeader)
     .contentTypeHeader("application/json")
 
+  val reqPerSec = Integer.getInteger("reqPerSec", 125).toInt
+
   setUp(
     ReadCommandScenario.writeCommandsScenario.inject(
       rampUsersPerSec(1) to 20 during(60 seconds),
@@ -28,8 +30,8 @@ class PCReadSimulation extends Simulation {
       constantUsersPerSec(20) during (60*5 seconds)
     ),
     ReadScenario.readScenario.inject(
-      rampUsersPerSec(1) to 1200 during(60 seconds),
-      constantUsersPerSec(1200) during (60*5 seconds)
+      rampUsersPerSec(1) to reqPerSec.toDouble during(60 seconds),
+      constantUsersPerSec(reqPerSec.toDouble) during (60*5 seconds)
     )
   )
     .protocols(httpConf)

@@ -51,11 +51,13 @@ object WriteScenario {
   val writeScenario = scenario("Write scenario")
     .feed(productIdIncremental)
     .feed(categoryIdFeeder)
-    .exec(postProductHttp)
-    .pause(1)
-    .exec(postProductAddCategoryHttp)
-    .pause(1)
-    .exec(postEditProduct)
+    .group("write-group") {
+      exec(postProductHttp)
+        .pause(1)
+        .exec(postProductAddCategoryHttp)
+        .pause(1)
+        .exec(postEditProduct)
+    }
 
   val fillWriteSideCategoriesScenario = scenario("Fill write side scenario - Categories")
     .feed(categoryIdFeeder)
