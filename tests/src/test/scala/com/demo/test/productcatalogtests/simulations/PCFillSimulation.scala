@@ -20,9 +20,9 @@ class PCFillSimulation extends Simulation {
     WriteScenario.fillWriteSideCategoriesScenario.inject(
       atOnceUsers(100)
     )
-    /*
     // insert 500 products
-    WriteScenario.fillWriteSideScenario.inject(
+    /*
+    ,WriteScenario.fillWriteSideScenario.inject(
       nothingFor(20 seconds),
       atOnceUsers(125),
       nothingFor(5 seconds),
@@ -31,6 +31,7 @@ class PCFillSimulation extends Simulation {
       atOnceUsers(125),
       nothingFor(5 seconds),
       atOnceUsers(125)
+    )
 
      */
   )

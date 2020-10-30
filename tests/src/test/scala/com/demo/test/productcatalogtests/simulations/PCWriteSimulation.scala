@@ -14,8 +14,12 @@ class PCWriteSimulation extends Simulation {
     .headers(Headers.commonHeader)
     .contentTypeHeader("application/json")
 
+  val reqPerSec = Integer.getInteger("reqPerSec", 125).toInt
 
   setUp(WriteScenario.writeScenario.inject(
+    rampUsersPerSec(1) to reqPerSec.toDouble during(60 seconds),
+    constantUsersPerSec(reqPerSec.toDouble) during (60*5 seconds)
+    /*
     rampUsersPerSec(1) to 50 during(30 seconds),
     constantUsersPerSec(50) during (60 seconds),
     rampUsersPerSec(50) to 100 during(30 seconds),
@@ -26,6 +30,8 @@ class PCWriteSimulation extends Simulation {
     constantUsersPerSec(200) during (60 seconds),
     rampUsersPerSec(200) to 250 during(30 seconds),
     constantUsersPerSec(250) during (60 seconds)
+
+     */
 
     /*rampUsers(400) to 500 during (60 seconds),
     constantUsersPerSec(500) during (60 seconds),

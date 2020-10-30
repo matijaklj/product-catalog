@@ -48,15 +48,18 @@ object WriteScenario {
     .check(status is 200)
     .check(bodyString exists)
 
+  // the main write scenario
   val writeScenario = scenario("Write scenario")
     .feed(productIdIncremental)
     .feed(categoryIdFeeder)
     .group("write-group") {
-      exec(postProductHttp)
-        .pause(1)
-        .exec(postProductAddCategoryHttp)
-        .pause(1)
-        .exec(postEditProduct)
+      exitBlockOnFail {
+        exec(postProductHttp)
+          .pause(1)
+          .exec(postProductAddCategoryHttp)
+          //.pause(1)
+          //.exec(postEditProduct)
+      }
     }
 
   val fillWriteSideCategoriesScenario = scenario("Fill write side scenario - Categories")

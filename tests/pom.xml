@@ -51,6 +51,12 @@
                         </goals>
                         <configuration>
                             <simulationClass>com.demo.test.productcatalogtests.simulations.ProductCatalogSimulation</simulationClass>
+                            <compilerJvmArgs>
+                                <compilerJvmArg>-Xmx512m</compilerJvmArg>
+                            </compilerJvmArgs>
+                            <jvmArgs>
+                                <jvmArg>-Xmx4g</jvmArg>
+                            </jvmArgs>
                         </configuration>
                     </execution>
                 </executions>
