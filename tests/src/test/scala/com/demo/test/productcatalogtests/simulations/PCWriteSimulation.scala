@@ -16,12 +16,16 @@ class PCWriteSimulation extends Simulation {
 
 
   setUp(WriteScenario.writeScenario.inject(
-    atOnceUsers(1),
-      nothingFor(10 seconds),
-      rampUsersPerSec(1) to 500 during(60 seconds),
-      constantUsersPerSec(500) during (60*4 seconds)
-
-
+    rampUsersPerSec(1) to 100 during(60 seconds),
+    constantUsersPerSec(100) during (60 seconds),
+    rampUsersPerSec(100) to 200 during(60 seconds),
+    constantUsersPerSec(200) during (60 seconds),
+    rampUsersPerSec(200) to 300 during(60 seconds),
+    constantUsersPerSec(300) during (60 seconds),
+    rampUsersPerSec(300) to 400 during(60 seconds),
+    constantUsersPerSec(400) during (60 seconds),
+    rampUsersPerSec(400) to 500 during(60 seconds),
+    constantUsersPerSec(500) during (60 seconds)
   ))
     .protocols(httpConf)
     .assertions(

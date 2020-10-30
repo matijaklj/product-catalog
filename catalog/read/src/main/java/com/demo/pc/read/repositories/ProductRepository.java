@@ -100,7 +100,7 @@ public class ProductRepository {
     }
 
     public void addProductCategory(String id, CategoryDto c) {
-        try {
+        /*try {
             String jsonStr = objectMapper.writeValueAsString(c);
 
             Document cat = Document.parse(jsonStr);
@@ -111,11 +111,17 @@ public class ProductRepository {
         } catch (Exception e) {
             e.printStackTrace();
         }
+         */
+        ProductDto p = getProduct(id);
+        p.setCategory(c);
+
+        updateProduct(p);
     }
 
     public void removeProductCategory(String id, CategoryDto c) {
         ProductDto p = getProduct(id);
-        p.getCategories().remove(c);
+        //p.getCategories().remove(c);
+        p.setCategory(null);
 
         updateProduct(p);
     }

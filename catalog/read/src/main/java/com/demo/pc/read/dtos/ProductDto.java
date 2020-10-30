@@ -10,20 +10,21 @@ public class ProductDto implements Serializable {
     private String description;
     private Integer stock = null;
     private Float price = null;
-    private List<String> categories;
+    //private List<String> categories;
+    private CategoryDto category;
 
     public ProductDto(String id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.categories = new ArrayList<>();
+        //this.categories = new ArrayList<>();
     }
 
     public ProductDto(String id, String name, String description, List<String> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.categories = categories;
+        //this.categories = categories;
     }
 
     public ProductDto() {}
@@ -68,11 +69,20 @@ public class ProductDto implements Serializable {
         this.price = price;
     }
 
-    public List<String> getCategories() {
+    public CategoryDto getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDto category) {
+        this.category = category;
+    }
+
+    /*public List<String> getCategories() {
         return categories;
     }
 
     public void setCategories(List<String> categories) {
         this.categories = categories;
     }
+     */
 }

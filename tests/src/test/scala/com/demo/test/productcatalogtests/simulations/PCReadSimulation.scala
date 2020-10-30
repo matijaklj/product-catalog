@@ -28,9 +28,9 @@ class PCReadSimulation extends Simulation {
       constantUsersPerSec(20) during (60*5 seconds)
     ),
     ReadScenario.readScenario.inject(
-      rampUsersPerSec(1) to 1200 during(60 seconds),
-      constantUsersPerSec(1200) during (60*5 seconds)
-    )
+      rampUsersPerSec(1) to 1600 during(60 seconds),
+      constantUsersPerSec(1600) during (60*5 seconds)
+  )
   )
     .protocols(httpConf)
     .assertions(
