@@ -5,8 +5,10 @@
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
     <persistence-unit name="product-catalog-write" transaction-type="JTA">
-        <jta-data-source>jdbc/productCatalogDS</jta-data-source>
+        <!--<jta-data-source>jdbc/productCatalogDS</jta-data-source>-->
+        <jta-data-source>jdbc/PostgresXADS</jta-data-source>
         <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
             <property name="javax.persistence.sql-load-script-source" value="META-INF/sql/data.sql" />

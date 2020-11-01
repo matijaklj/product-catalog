@@ -3,11 +3,16 @@ axon:
     componentName: product-catalog-write
 
 kumuluzee:
-  datasources:
-    - jndi-name: jdbc/productCatalogDS
-      connection-url: jdbc:postgresql://localhost:5432/productCatalog
+  xa-datasources:
+    - jndi-name: jdbc/PostgresXADS
+      #connection-url: jdbc:postgresql://10.132.0.25:5432/productcatalog
+      xa-datasource-class: org.postgresql.xa.PGXADataSource
       #connection-url: jdbc:postgresql://pc:5432/productCatalog
-      username: postgres
-      password: postgres
+      props:
+        server-name: 35.205.40.143
+        port-number: 5432
+        database-name: productcatalog
+      username: matijaklj
+      password: axonTest
       pool:
         max-size: 2000

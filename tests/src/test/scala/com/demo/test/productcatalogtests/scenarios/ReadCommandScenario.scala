@@ -4,7 +4,7 @@ import com.demo.test.productcatalogtests.util.Enviroment
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.Predef._
-import sun.jvm.hotspot.runtime.Flags
+//import sun.jvm.hotspot.runtime.Flags
 
 object ReadCommandScenario {
 
