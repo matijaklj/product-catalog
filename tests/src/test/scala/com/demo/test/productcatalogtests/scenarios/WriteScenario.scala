@@ -57,8 +57,8 @@ object WriteScenario {
         exec(postProductHttp)
           .pause(1)
           .exec(postProductAddCategoryHttp)
-          //.pause(1)
-          //.exec(postEditProduct)
+          .pause(1)
+          .exec(postEditProduct)
       }
     }
 

@@ -35,13 +35,17 @@ public class Product implements Serializable {
     private String name;
     private String description;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(
+    //@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    /*@JoinTable(
             name = "Product_Category",
             joinColumns = {@JoinColumn(name = "product_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
     private Set<Category> categories = new HashSet<>();
+     */
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
 
     public Product() {}
 
@@ -71,22 +75,25 @@ public class Product implements Serializable {
     @CommandHandler
     public void addCategory(AddProductCategoryCmd cmd) throws CategoryAlreadyAddedException {
         logger.info("Adding category id: " + cmd.getCategoryId() + " to Product id: " + cmd.getId() + ".");
-        if (categories.stream().noneMatch(c -> c.getId().equals(cmd.getCategoryId()))) {
+        this.category = new Category(cmd.getCategoryId());
+
+        apply(new ProductCategoryAddedEvent(cmd.getId(), cmd.getCategoryId()));
+        /*if (categories.stream().noneMatch(c -> c.getId().equals(cmd.getCategoryId()))) {
             this.categories.add(new Category(cmd.getCategoryId()));
 
             apply(new ProductCategoryAddedEvent(cmd.getId(), cmd.getCategoryId()));
         } else {
             throw new CategoryAlreadyAddedException();
-        }
+        }*/
 
     }
 
-    public Set<Category> getCategories() {
-        return categories;
+    public Category getCategories() {
+        return category;
     }
 
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String getId() {
