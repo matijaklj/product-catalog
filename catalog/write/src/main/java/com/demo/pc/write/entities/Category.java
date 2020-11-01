@@ -7,11 +7,10 @@ import org.axonframework.commandhandling.CommandHandler;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
-import static org.axonframework.modelling.command.AggregateLifecycle.createNew;
 
 @Entity
 @ApplicationScoped
@@ -22,13 +21,18 @@ public class Category {
     private String id;
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    /*@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "Product_Category",
             joinColumns = {@JoinColumn(name = "product_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
+    )*/
+
+    @OneToMany(
+            mappedBy = "category",
+            cascade = CascadeType.ALL
     )
-    private Set<Product> products = new HashSet<>();
+    private List<Product> products = new ArrayList<>();
 
 
     @CommandHandler
@@ -62,11 +66,11 @@ public class Category {
         this.name = name;
     }
 
-    public Set<Product> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 }
