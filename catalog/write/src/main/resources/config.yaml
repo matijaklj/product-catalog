@@ -9,10 +9,10 @@ kumuluzee:
       xa-datasource-class: org.postgresql.xa.PGXADataSource
       #connection-url: jdbc:postgresql://pc:5432/productCatalog
       props:
-        server-name: 35.205.40.143
+        server-name: 10.132.0.25
         port-number: 5432
         database-name: productcatalog
       username: matijaklj
       password: axonTest
       pool:
-        max-size: 2000
+        max-size: 10000
